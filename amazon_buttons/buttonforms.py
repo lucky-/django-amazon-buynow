@@ -2,37 +2,55 @@ from amazon_buttons import buttonconf
 from django.conf import settings
 import base64
 import hmac
-import sha
+import hashlib
+from django.utils.safestring import mark_safe
+import urllib
 
 
-#  Creates the different buttons. Default data for the buttons comes from buttonconf.py.  Standard data for all buttons can be entered in gen_data dict or individual data for each payment service can be entered in paypal_data,google_data,and amazon_data.  If both, the individual dictionaries will override.
+#encryption alg for button signature. for POST only
+def sig_maker(key, outer_dict):
+	
+	in_crypt = 'POST\n'
+	data_dict = outer_dict.copy()
+	data_dict['target_url'] = data_dict['target_url'][data_dict['target_url'].find('//')+2:]
+	in_crypt +=data_dict['target_url'].lower()[:data_dict['target_url'].find('.com')+4] +'\n'
+	in_crypt += data_dict['target_url'].lower()[data_dict['target_url'].find('.com')+4:] +'\n'
+	all_hidden = data_dict.items()
+	all_hidden.remove(('target_url',data_dict['target_url']))
+	all_hidden.sort(key=lambda x:str(x[0]))
+	first = True	
+	for item in all_hidden:
+		if first:
+			in_crypt += urllib.quote(item[0]).replace('/','%2F') + '=' + urllib.quote(item[1]).replace('/','%2F')
+			first = False
+		else:
+			in_crypt += '&' + urllib.quote(item[0]).replace('/','%2F') + '=' + urllib.quote(item[1]).replace('/','%2F')
+	return base64.encodestring(hmac.new(key, in_crypt, hashlib.sha256).digest()).strip()
 
 
-class button_data:
+
+
+class button:
 	def __init__(self, b_data):
 		self.b_data = b_data
 	
 		
-	def render(self, sandbox = '', button_url = buttonconf.BUTTONURL):
+	def render(self, sandbox = False, button_url = buttonconf.BUTTONURL):
 		prepd_data = buttonconf.DEFAULT_DATA
+		prepd_data['accessKey'] = settings.AMAZON_ACCESS_KEY
 		for key, val in self.b_data.iteritems():
 			prepd_data[key] = str(val)
-		#create signature
 		s_key = settings.AMAZON_SECRET_KEY
-		all_hidden = prepd_data.items()
-		all_hidden.sort(key=lambda x:str(x[0]).lower())
-		in_crypt = ''
-		for item in all_hidden:
-			in_crypt += (str(item[0]) + str(item[1]))
-		prepd_data['signature'] = base64.encodestring(hmac.new(s_key, in_crypt, sha).digest()).strip()
 		if sandbox:
-			target_url = buttonconf.AMAZON_SANDBOX_URL + sandbox
+			prepd_data['target_url'] = buttonconf.AMAZON_SANDBOX_URL
 		else:
-			target_url = buttonconf.AMAZON_URL
-		form ='<form action="{0}" method="post">'.format(target_url)
+			prepd_data['target_url'] = buttonconf.AMAZON_URL
+		prepd_data['signature'] = sig_maker(s_key, prepd_data)
+		form ='<form action="{0}" method="post">'.format(prepd_data['target_url'])
+		del prepd_data['target_url']
 		for name, val in prepd_data.iteritems():
 			form += '<input name="{0}" type="hidden" value="{1}" />'.format(name,val)
 		form += '<input type="image" src="{0}" border="0" /></form>'.format(button_url)
-		return form		
+		return mark_safe(form)		
 
 	
