@@ -2,7 +2,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from amazon_buttons import models
 import datetime
-from django.conf import settings
 
 
 
@@ -16,9 +15,5 @@ def ipn_handler(request):
 		attrib = getattr(ipn, key, None)
 		if attrib:
 			attrib = val
-	if settings.AMAZON_IPN_VERIFY:
-		pass
-	else:
-		ipn.save()
-	return HttpResponse('Done')
+	if 
 	
