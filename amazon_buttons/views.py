@@ -11,6 +11,7 @@ from django.conf import settings
 
 @csrf_exempt
 def ipn_handler(request):
+	ipn = models.ipn_response()
 	ipn.datetime = datetime.datetime.fromtimestamp(int(request.POST['transactionDate']))
 	for key, val in request.POST.iteritems():
 		attrib = getattr(ipn, key, None)
