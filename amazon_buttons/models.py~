@@ -15,6 +15,8 @@ class ipn_response(models.Model):
 	transactionId = models.CharField(max_length=300)
 	paymentMethod = models.CharField(max_length=50)
 	transactionAmount = models.CharField(max_length=50)
+	def __unicode__(self):  
+        	return self.status + ' ' + self.datetime.strftime("%b %d %Y %H:%M")
 		
 
 
