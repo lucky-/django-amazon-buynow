@@ -1,4 +1,5 @@
 from amazon_buttons import buttonconf
+from amazon_buttons import urls
 from django.conf import settings
 import base64
 import hmac
@@ -40,6 +41,8 @@ class button:
 			prepd_data = buttonconf.DEFAULT_CRYPT_DATA
 		else:
 			prepd_data = buttonconf.DEFAULT_DATA
+		if settings.AMAZON_IPN:
+			prepd_data['ipnUrl'] = urls.thatone
 		for key, val in self.b_data.iteritems():
 			prepd_data[key] = str(val)
 		if sandbox:
