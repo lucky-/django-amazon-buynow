@@ -6,6 +6,7 @@ import hmac
 import hashlib
 from django.utils.safestring import mark_safe
 import urllib
+from django.core.urlresolvers import reverse
 
 
 #encryption alg for button signature. for POST only
@@ -42,7 +43,7 @@ class button:
 		else:
 			prepd_data = buttonconf.DEFAULT_DATA
 		if settings.AMAZON_IPN:
-			prepd_data['ipnUrl'] = urls.thatone
+			prepd_data['ipnUrl'] = settings.DOMAIN_FOR_AMAZON_IPN + reverse('amazon_ipn')
 		for key, val in self.b_data.iteritems():
 			prepd_data[key] = str(val)
 		if sandbox:
