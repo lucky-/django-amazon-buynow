@@ -35,17 +35,20 @@ class button:
 		self.b_data = b_data
 	
 		
-	def render(self, sandbox = False, button_url = buttonconf.BUTTONURL):
-		prepd_data = buttonconf.DEFAULT_DATA
-		prepd_data['accessKey'] = settings.AMAZON_ACCESS_KEY
+	def render(self, sandbox = False,  signed=False, button_url = buttonconf.BUTTONURL):
+		if signed:		
+			prepd_data = buttonconf.DEFAULT_CRYPT_DATA
+		else:
+			prepd_data = buttonconf.DEFAULT_DATA
 		for key, val in self.b_data.iteritems():
 			prepd_data[key] = str(val)
-		s_key = settings.AMAZON_SECRET_KEY
 		if sandbox:
 			prepd_data['target_url'] = buttonconf.AMAZON_SANDBOX_URL
 		else:
 			prepd_data['target_url'] = buttonconf.AMAZON_URL
-		prepd_data['signature'] = sig_maker(s_key, prepd_data)
+		if signed:
+			s_key = settings.AMAZON_SECRET_KEY
+			prepd_data['signature'] = sig_maker(s_key, prepd_data)
 		form ='<form action="{0}" method="post">'.format(prepd_data['target_url'])
 		del prepd_data['target_url']
 		for name, val in prepd_data.iteritems():

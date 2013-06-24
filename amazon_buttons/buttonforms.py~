@@ -35,9 +35,11 @@ class button:
 		self.b_data = b_data
 	
 		
-	def render(self, sandbox = False, button_url = buttonconf.BUTTONURL):
-		prepd_data = buttonconf.DEFAULT_DATA
-		prepd_data['accessKey'] = settings.AMAZON_ACCESS_KEY
+	def render(self, sandbox = False,  sign=False, button_url = buttonconf.BUTTONURL):
+		if sign:		
+			prepd_data = buttonconf.DEFAULT_CRYPT_DATA
+		else:
+			prepd_data = buttonconf.DEFAULT_DATA
 		for key, val in self.b_data.iteritems():
 			prepd_data[key] = str(val)
 		s_key = settings.AMAZON_SECRET_KEY
@@ -47,6 +49,7 @@ class button:
 			prepd_data['target_url'] = buttonconf.AMAZON_URL
 		prepd_data['signature'] = sig_maker(s_key, prepd_data)
 		form ='<form action="{0}" method="post">'.format(prepd_data['target_url'])
+		del prepd_data['target_url']
 		for name, val in prepd_data.iteritems():
 			form += '<input name="{0}" type="hidden" value="{1}" />'.format(name,val)
 		form += '<input type="image" src="{0}" border="0" /></form>'.format(button_url)
