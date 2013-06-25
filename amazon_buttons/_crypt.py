@@ -16,5 +16,9 @@ def sig_maker(key, outer_dict, method):
 	all_hidden.sort(key=lambda x:str(x[0]))
 	first = True	
 	for item in all_hidden:
-		in_crypt += urllib.urlencode(all_hidden)
+		if first:
+			in_crypt += urllib.quote(item[0]).replace('/','%2F') + '=' + urllib.quote(item[1]).replace('/','%2F')
+			first = False
+		else:
+			in_crypt += '&' + urllib.quote(item[0]).replace('/','%2F') + '=' + urllib.quote(item[1]).replace('/','%2F')
 	return base64.encodestring(hmac.new(key, in_crypt, hashlib.sha256).digest()).strip()
