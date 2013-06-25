@@ -6,7 +6,7 @@ from django.conf import settings
 import urllib
 import urllib2
 from amazon_buttons import buttonconf
-
+from amazon_buttons import _crypt
 
 
 
@@ -25,14 +25,16 @@ def ipn_handler(request):
 			ver_url = buttonconf.SANDBOX_VERIFY		
 		else:
 			ver_url = buttonconf.LIVE_VERIFY
-		params = request.POST.copy()
-		pre_params = dict(Action = 'VerifySignature', UrlEndPoint = settings.DOMAIN_FOR_AMAZON_IPN + request.path)
-		ver_url += '?' + urllib.urlencode(pre_params) + '&' + urllib.urlencode(params)
+		prepd_data = buttonconf.DEFAULT_DATA
+		prepd_data['Action'] = 'VerifySignature'
+		prepd_data['UrlEndPoint'] = ver_url
+		prepd_data['HttpParameters'] = urllib.urlencode(request.POST)
+#		params = request.POST.copy()
+#		pre_params = dict(Action = 'VerifySignature', UrlEndPoint = settings.DOMAIN_FOR_AMAZON_IPN + request.path)
+#		ver_url += '?' + urllib.urlencode(pre_params) + '&' + urllib.urlencode(params)
 		# for testing
 		print ver_url
-		req = urllib2.Request(ver_url)
-		resp = urllib2.openurl(req)
-		print resp.read()
+		
 		
 	else:
 		ipn.save()
