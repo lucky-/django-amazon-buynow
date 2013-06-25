@@ -16,7 +16,7 @@ def ipn_handler(request):
 	for key, val in request.POST.iteritems():
 		attrib = getattr(ipn, key, None)
 		if attrib:
-			attrib = val
+			setattr(ipn, key, value)
 	if settings.AMAZON_IPN_VERIFY:
 		pass
 	else:
