@@ -26,7 +26,7 @@ def ipn_handler(request):
 		else:
 			ver_url = buttonconf.LIVE_VERIFY
 		params = request.POST.copy()
-		pre_params = dict(Action = 'VerifySignature', UrlEndPoint = settings.DOMAIN_FOR_AMAZON_IPN + request.POST.path)
+		pre_params = dict(Action = 'VerifySignature', UrlEndPoint = settings.DOMAIN_FOR_AMAZON_IPN + request.path)
 		ver_url += '?' + urllib.urlencode(pre_params) + '&' + urllib.urlencode(params)
 		# for testing
 		print ver_url
