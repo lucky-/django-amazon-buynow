@@ -27,7 +27,7 @@ def ipn_handler(request):
 		prepd_data = buttonconf.DEFAULT_IPNVER_DATA
 		prepd_data['UrlEndPoint'] = ver_url
 		prepd_data['target_url'] = ver_url
-		prepd_data['HttpParameters'] = urllib.urlencode(request.POST)
+		prepd_data['HttpParameters'] = urllib.quote(urllib.urlencode(request.POST)).replace('/','%2F')
 		prepd_data['AWSAccessKeyId'] = settings.AMAZON_ACCESS_KEY 
 		prepd_data['Timestamp'] = datetime.datetime.now().isoformat()
 		s_key = settings.AMAZON_SECRET_KEY
