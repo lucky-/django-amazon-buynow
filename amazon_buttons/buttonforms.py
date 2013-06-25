@@ -37,7 +37,7 @@ class button:
 		self.b_data = b_data
 	
 		
-	def render(self, sandbox = False,  signed=False, button_url = buttonconf.BUTTONURL):
+	def render(self, sandbox = settings.AMAZON_SANDBOX,  signed=False, button_url = buttonconf.BUTTONURL):
 		if signed:		
 			prepd_data = buttonconf.DEFAULT_CRYPT_DATA
 		else:

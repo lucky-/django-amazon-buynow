@@ -15,8 +15,14 @@ class ipn_response(models.Model):
 	transactionId = models.CharField(max_length=300, default='empty')
 	paymentMethod = models.CharField(max_length=50, default='empty')
 	transactionAmount = models.CharField(max_length=50, default='empty')
+	ver_choice = (
+        ('unverified', 'unverified'),
+        ('verified', 'verified'),
+        ('FLAG', 'FLAG'),
+    	)
+	ver_status = models.CharField(max_length=50, default='unverified', choices=ver_choice)
 	def __unicode__(self):  
-        	return self.status + ' ' + self.datetime.strftime("%b %d %Y %H:%M")
+        	return self.status + ' ' + self.datetime.strftime("%b %d %Y %H:%M") + ' ' + self.ver_status 
 		
 
 
