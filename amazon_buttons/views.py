@@ -4,7 +4,6 @@ from amazon_buttons import models
 import datetime
 from django.conf import settings
 import urllib
-import urllib2
 from amazon_buttons import buttonconf
 from amazon_buttons import _crypt
 
@@ -25,10 +24,15 @@ def ipn_handler(request):
 			ver_url = buttonconf.SANDBOX_VERIFY		
 		else:
 			ver_url = buttonconf.LIVE_VERIFY
-		prepd_data = buttonconf.DEFAULT_DATA
-		prepd_data['Action'] = 'VerifySignature'
+		prepd_data = buttonconf.DEFAULT_IPNVER_DATA
 		prepd_data['UrlEndPoint'] = ver_url
+		prepd_data['target_url'] = ver_url
 		prepd_data['HttpParameters'] = urllib.urlencode(request.POST)
+		prepd_data['AWSAccessKeyId'] = settings.AMAZON_ACCESS_KEY 
+		prepd_data['Timestamp'] = datetime.datetime.now().isoformat()
+		s_key = settings.AMAZON_SECRET_KEY
+		prepd_data['Signature'] = _crypt.sig_maker(s_key, prepd_data,'GET')
+		del prepd_data['target_url']
 		fin_url = urllib.urlencode(prepd_data)
 		print fin_url
 		
