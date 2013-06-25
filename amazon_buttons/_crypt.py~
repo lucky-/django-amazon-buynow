@@ -1,4 +1,8 @@
-#encryption alg for button signature. for POST only
+import base64
+import hmac
+import hashlib
+
+#encryption alg for amazon signature
 def sig_maker(key, outer_dict, method):
 	
 	in_crypt = '{0}\n'.format(method)

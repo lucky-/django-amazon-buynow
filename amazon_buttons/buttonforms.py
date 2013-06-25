@@ -1,9 +1,7 @@
 from amazon_buttons import buttonconf
 from amazon_buttons import urls
 from django.conf import settings
-import base64
-import hmac
-import hashlib
+
 from django.utils.safestring import mark_safe
 import urllib
 from django.core.urlresolvers import reverse

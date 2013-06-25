@@ -1,3 +1,8 @@
+import base64
+import hmac
+import hashlib
+import urllib
+
 #encryption alg for amazon signature
 def sig_maker(key, outer_dict, method):
 	

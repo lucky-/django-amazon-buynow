@@ -7,7 +7,7 @@ import hashlib
 from django.utils.safestring import mark_safe
 import urllib
 from django.core.urlresolvers import reverse
-
+from amazon_buttons import _crypt
 
 
 
@@ -34,7 +34,7 @@ class button:
 			prepd_data['target_url'] = buttonconf.AMAZON_URL
 		if signed:
 			s_key = settings.AMAZON_SECRET_KEY
-			prepd_data['signature'] = sig_maker(s_key, prepd_data)
+			prepd_data['signature'] = _crypt.sig_maker(s_key, prepd_data,'POST')
 		form ='<form action="{0}" method="post">'.format(prepd_data['target_url'])
 		del prepd_data['target_url']
 		for name, val in prepd_data.iteritems():
