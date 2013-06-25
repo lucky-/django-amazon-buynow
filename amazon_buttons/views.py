@@ -31,7 +31,7 @@ def ipn_handler(request):
 		# for testing
 		print ver_url
 		req = urllib2.Request(ver_url)
-		resp = urllib2.openurl(req)
+		resp = urllib2.urlopen(req)
 		print resp.read()
 		
 	else:
