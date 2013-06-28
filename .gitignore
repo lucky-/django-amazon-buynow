@@ -1,4 +1,5 @@
 manage.py
 *.pyc
+*.py~
 ab/
 tester/
