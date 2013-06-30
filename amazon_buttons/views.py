@@ -6,7 +6,7 @@ from django.conf import settings
 import urllib
 from amazon_buttons import buttonconf
 from amazon_buttons import _crypt
-
+from django.core.urlresolvers import reverse
 
 
 
