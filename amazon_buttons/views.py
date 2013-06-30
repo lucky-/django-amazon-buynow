@@ -25,7 +25,7 @@ def ipn_handler(request):
 		else:
 			ver_url = buttonconf.LIVE_VERIFY
 		prepd_data = buttonconf.DEFAULT_IPNVER_DATA
-		prepd_data['UrlEndPoint'] = settings.DOMAIN_FOR_AMAZON_IPN + reverse('amazon_ipn')
+		prepd_data['UrlEndPoint'] = ver_url
 		prepd_data['target_url'] = ver_url
 		prepd_data['HttpParameters'] = urllib.urlencode(request.POST)
 		prepd_data['AWSAccessKeyId'] = settings.AMAZON_ACCESS_KEY 
