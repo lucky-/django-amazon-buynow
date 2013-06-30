@@ -38,6 +38,8 @@ class button:
 		for name, val in prepd_data.iteritems():
 			form += '<input name="{0}" type="hidden" value="{1}" />'.format(name,val)
 		form += '<input type="image" src="{0}" border="0" /></form>'.format(button_url)
+		if signed:
+			del prepd_data['signature']
 		return mark_safe(form)		
 
 	
