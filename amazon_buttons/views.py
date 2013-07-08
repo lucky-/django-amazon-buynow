@@ -7,6 +7,7 @@ import urllib
 from amazon_buttons import buttonconf
 from amazon_buttons import _crypt
 from django.core.urlresolvers import reverse
+from xml.dom import minidom
 
 
 
@@ -20,6 +21,7 @@ def ipn_handler(request):
 		if attrib:
 			setattr(ipn, key, val)
 	if settings.AMAZON_IPN_VERIFY:
+		flagged = True
 		if settings.AMAZON_SANDBOX:
 			ver_url = buttonconf.SANDBOX_VERIFY		
 		else:
@@ -33,8 +35,19 @@ def ipn_handler(request):
 		s_key = settings.AMAZON_SECRET_KEY
 		prepd_data['Signature'] = _crypt.sig_maker(s_key, prepd_data,'GET')
 		del prepd_data['target_url']
-		fin_url = urllib.urlencode(prepd_data)
-		print fin_url
+		ver_url += '?' + urllib.urlencode(prepd_data)
+		resp = urllib.urlopen(ver_url)
+		ver_node = minidom.parse(resp).getElementsByTagName('VerificationStatus')
+		if ver_node:
+			if str(ver_node[0].firstChild.data) == 'Success':
+				flagged = False
+		if flagged:
+			ipn.ver_status = 'FLAG'
+		else:
+			ipn.ver_status =  'verified'
+		ipn.save()
+			
+		
 		
 		
 	else:
