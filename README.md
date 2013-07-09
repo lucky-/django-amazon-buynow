@@ -92,14 +92,14 @@ Ipns will trigger a save() action for the ipn model, and can thus be called via 
 Example:
 (the following can be placed anywhere in your project as long as it is imported at some point)
 
-import amazon_buttons.models
-from django.dispatch import receiver
-from django.db.models.signals import post_save
+	import amazon_buttons.models
+	from django.dispatch import receiver
+	from django.db.models.signals import post_save
 
 
-@receiver(post_save, sender=amazon_buttons.models.ipn_response)
-def it_works(sender, instance, signal, *args, **kwargs):
-        print str(instance.transactionId) + ' was completed successfully'
+	@receiver(post_save, sender=amazon_buttons.models.ipn_response)
+	def it_works(sender, instance, signal, *args, **kwargs):
+		print str(instance.transactionId) + ' was completed successfully'
 
 
 
