@@ -20,6 +20,7 @@ class button:
 	def render(self, sandbox = settings.AMAZON_SANDBOX,  signed=False, button_url = buttonconf.BUTTONURL):
 		if signed:		
 			prepd_data = buttonconf.DEFAULT_CRYPT_DATA
+			prepd_data['accessKey'] = settings.AMAZON_ACCESS_KEY
 		else:
 			prepd_data = buttonconf.DEFAULT_DATA
 		if settings.AMAZON_IPN:
