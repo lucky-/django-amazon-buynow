@@ -3,3 +3,5 @@ manage.py
 *.py~
 ab/
 tester/
+LICENSE~
+*.md~
